@@ -1,0 +1,1 @@
+# this script set up all needed infrasructure

@@ -1,0 +1,1 @@
+# this script is launching all the system
