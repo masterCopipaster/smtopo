@@ -4,7 +4,7 @@ import numpy as np
 class laser:
 
     def __init__(self, args):
-        self.data = args["data"]
+        pass
 
     def on(self):
         print("laser ON")
@@ -13,7 +13,7 @@ class laser:
         print("laser OFF")
 
     def measure(self):
-        return self.data
+        return 1.0
 
     def info(self):
         return "laser module abstract stub"
@@ -23,13 +23,13 @@ class magnetometer:
     def __init__(self, args):
         self.calibration_a = np.diag(np.full(3, 1))
         self.calibration_b = np.full(3, 0)
-        self.data = np.array(args["data"])
 
     def measure_raw(self):
-        return self.data
+        data = np.array([1.0, 0.0, 0.0])
+        return data
 
     def measure(self):
-        data = self.measure_raw()
+        data = np.array([1.0, 0.0, 0.0])
         return np.matmul(data, self.calibration_a) + self.calibration_b 
     
     def set_calibration(self, a, b):
@@ -44,13 +44,13 @@ class accelerometer:
     def __init__(self, args):
         self.calibration_a = np.diag(np.full(3, 1))
         self.calibration_b = np.full(3, 0)
-        self.data = np.array(args["data"])
 
     def measure_raw(self):
-        return self.data
+        data = np.array(0.0, 0.0, -1.0)
+        return data
 
     def measure(self):
-        data = self.measure_raw()
+        data = np.array(0.0, 0.0, -1.0)
         return np.matmul(data, self.calibration_a) + self.calibration_b 
     
     def set_calibration(self, a, b):

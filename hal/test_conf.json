@@ -1,0 +1,5 @@
+{
+    "accelerometer":{"module":"hal", "class":"accelerometer", "args":{"data":[0, 0, -1]}},
+    "magnetometer":{"module":"hal", "class":"magnetometer", "args":{"data":[0, -1, 0]}},
+    "laser":{"module":"hal", "class":"laser", "args":{"data":1}}
+}
