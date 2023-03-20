@@ -1,5 +1,5 @@
 {
     "accelerometer":{"module":"mpu9250", "class":"mpu9250", "args":{}},
-    "magnetometer":{"module":"rm3100", "class":"rm3100", "args":{"bus":"3", "addr":"23"}},
-    "laser":{"module":"laser_basic", "class":"laser_basic", "args":{"dev":"/dev/ttyS0"}}
+    "magnetometer":{"module":"rm3100", "class":"rm3100", "args":{"bus":"3", "addr":"23", "count":100}},
+    "laser":{"module":"laser_i2c", "class":"laser_i2c", "args":{"bus":4, "addr":88}}
 }

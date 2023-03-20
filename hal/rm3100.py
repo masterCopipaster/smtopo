@@ -3,7 +3,7 @@
 import subprocess
 from hal import magnetometer
 import numpy as np
-
+import json
 
 readerbin = "/usr/local/src/rm3100-runMag-master/runMag"
 
@@ -14,14 +14,17 @@ class rm3100(magnetometer):
         self.calibration_b = np.full(3, 0)
         self.bus = args["bus"]
         self.addr = args["addr"]
+        if "count" in args:
+            self.count = args["count"]
+        else:
+            self.count = 100
 
     def measure_raw(self):
-        cmd = [readerbin, f"-M {self.addr}", f"-b {self.bus}" ,"-s"]
-        result = subprocess.run(cmd, capture_output=True)
-        outlines = result.stdout.decode("ascii").strip().replace('"', '').split("\n")
-        legend = outlines[0].split(",")
-        data = outlines[1].split(",")
-        ddict = {legend[i].strip():data[i].strip() for i in range(min(len(legend), len(data)))}
+        cmd = [readerbin, f"-M {self.addr}", f"-b {self.bus}" ,f"-c {self.count}", "-s", "-m", "-j"]
+        #print("starting rm3100 subprocess")
+        result = subprocess.run(cmd, stdout=subprocess.PIPE)
+        #print(result)
+        ddict = json.loads(result.stdout.decode("utf-8"))
         #print(ddict)
         data = np.array([float(ddict["x"]), float(ddict["y"]), float(ddict["z"])])
         return data
@@ -37,6 +40,6 @@ class rm3100(magnetometer):
         return "runMag utility based rm3100 wrapper"
         
 if __name__ == "__main__":
-    l = rm3100({"bus":3, "addr":23})
+    l = rm3100({"bus":3, "addr":22})
     print("magnetic data:", l.measure_raw())
     print("info:", l.info())

@@ -2,6 +2,8 @@
 import numpy as np
 from threading import Thread
 from threading import Event
+import time
+
 class orientation:
     def __init__(self, config):
         mag_module = config["magnetometer"]["module"]
@@ -39,6 +41,7 @@ class orientation:
             if stopevent.is_set():
                 #print("stop event")
                 break
+            time.sleep(0.001)
         print(f"async worker exiting n = {num}")
         self.acc_vect = acc_acc / num
 
@@ -54,15 +57,17 @@ class orientation:
         return self.mag_vect, self.acc_vect
 
     def incl(self):
-        return np.degrees(np.arccos(self.acc_vect[0]/np.linalg.norm(self.acc_vect))) - 90
+        return -np.degrees(np.arccos(self.acc_vect[0]/np.linalg.norm(self.acc_vect))) + 90
 
     def azimuth(self):
+        self.mag_vect = -self.mag_vect
+        self.acc_vect = self.acc_vect
         mgplane = np.cross(self.acc_vect, self.mag_vect)
         #print(mgplane)
         xgplane = np.cross(self.acc_vect, np.array([1, 0, 0]))
         #print(xgplane)
         angle = np.degrees(np.arccos(np.dot(mgplane/np.linalg.norm(mgplane), xgplane/np.linalg.norm(xgplane))))
-        angledir = np.dot(np.cross(mgplane, xgplane), self.acc_vect) > 0
+        angledir = np.dot(np.cross(mgplane, xgplane), self.acc_vect) < 0
         if angledir:
             angle = 360 - angle
         return angle

@@ -26,7 +26,11 @@ class laser_basic(laser):
     def measure(self):
         resp = self.execute_command(b'D').decode("ascii").strip()
         parsed = parse("D: {:f}m,{}", resp)
-        return parsed[0]
+        try:
+            dist = parsed[0]
+            return True, dist
+        except:
+            return False, resp
 
     def info(self):
         return self.execute_command(b'S').decode("ascii")
